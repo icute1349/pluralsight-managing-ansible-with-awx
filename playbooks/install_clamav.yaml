@@ -1,0 +1,9 @@
+---
+- name: Install ClamAV on Linux hosts
+  hosts: all
+  tasks:
+    - name: Install ClamAV through package manager
+      ansible.builtin.package:
+        name: clamav
+        state: present
+      become: true
