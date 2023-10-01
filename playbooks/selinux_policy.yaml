@@ -2,7 +2,11 @@
 - name: Ensure SELinux policy is enforced
   hosts: all
   tasks:
-    - name: Install ClamAV through package manager
+    - name: Install SELinux Python library
+      ansible.builtin.pip:
+        name: libselinux-python
+        state: present
+    - name: Ensure SELinux policy is currently enforcing
       ansible.posix.selinux:
         policy: targeted
         state: enforcing
