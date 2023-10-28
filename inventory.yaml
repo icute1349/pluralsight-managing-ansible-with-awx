@@ -1,6 +1,16 @@
 ---
 all:
   hosts:
+    awx-managed-host-1:
+      ansible_host: 192.168.10.161
+      ansible_user: christopher
+      ansible_password: pluralsight!123
+      ansible_become_pass: pluralsight!123
+    awx-managed-host-2:
+      ansible_host: 192.168.10.162
+      ansible_user: christopher
+      ansible_password: pluralsight!123
+      ansible_become_pass: pluralsight!123
     awx-managed-host-3:
       ansible_host: 192.168.10.163
       ansible_user: christopher
