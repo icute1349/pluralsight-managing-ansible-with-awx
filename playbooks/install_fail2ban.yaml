@@ -1,0 +1,15 @@
+---
+- name: Install Fail2Ban on Linux hosts
+  hosts: all
+  tasks:
+    - name: Install Fail2Ban through package manager
+      ansible.builtin.package:
+        name: fail2ban
+        state: present
+      become: true
+    - name: Enable Fail2Ban system service
+      ansible.builtin.service:
+        name: fail2ban
+        state: started
+        enabled: true
+      become: true
