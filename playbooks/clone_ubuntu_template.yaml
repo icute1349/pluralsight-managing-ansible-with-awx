@@ -19,11 +19,30 @@
     - name: Display output of clone task
       ansible.builtin.debug:
         var: clone_output
+    - name: Update cloned virtual machine with new cloud-init IP address
+      community.general.proxmox_kvm:
+        api_host: 192.168.10.10
+        api_user: christopher@pve
+        api_password: "pluralsight!123"
+        node: "pve"
+        vmid: "{{ clone_output.vmid }}"
+        update: true
+        ipconfig:
+          ipconfig0: "ip={{ user_provided_ip }}/24,gw=192.168.10.1"
+        nameservers:
+          - "192.168.10.75"
+          - "192.168.10.76"
+        sarchdomains: "chrisjhart.net"
+      register: update_output
+    - name: Display output of update task
+      ansible.builtin.debug:
+        var: update_output
     - name: Start cloned virtual machine
       community.general.proxmox_kvm:
         api_host: 192.168.10.10
         api_user: christopher@pve
         api_password: "pluralsight!123"
+        node: "pve"
         vmid: "{{ clone_output.vmid }}"
         state: started
         timeout: 60
