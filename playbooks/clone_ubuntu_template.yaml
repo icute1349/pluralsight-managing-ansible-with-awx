@@ -1,0 +1,44 @@
+---
+- name: Clone a new Ubuntu virtual machine in Proxmox from an existing template
+  hosts: localhost
+  gather_facts: false
+  tasks:
+    - name: Clone Ubuntu virtual machine
+      community.general.proxmox_kvm:
+        api_host: 192.168.10.10
+        api_user: christopher@pve
+        api_password: "pluralsight!123"
+        node: "pve"
+        vmid: 100
+        clone: "Ubuntu-Cloudinit-Template"
+        full: true
+        name: "{{ user_provided_hostname }}"
+        storage: local-lvm
+        timeout: 300
+      register: clone_output
+    - name: Display output of clone task
+      ansible.builtin.debug:
+        var: clone_output
+    - name: Start cloned virtual machine
+      community.general.proxmox_kvm:
+        api_host: 192.168.10.10
+        api_user: christopher@pve
+        api_password: "pluralsight!123"
+        vmid: "{{ clone_output.vmid }}"
+        state: started
+        timeout: 60
+      register: start_output
+    - name: Display output of start task
+      ansible.builtin.debug:
+        var: start_output
+    - name: Fetch information about cloned virtual machine
+      community.general.proxmox_vm_info:
+        api_host: 192.168.10.10
+        api_user: christopher@pve
+        api_password: "pluralsight!123"
+        node: "pve"
+        vmid: "{{ clone_output.vmid }}"
+      register: cloned_vm_information
+    - name: Display information about cloned virtual machine
+      ansible.builtin.debug:
+        var: cloned_vm_information
