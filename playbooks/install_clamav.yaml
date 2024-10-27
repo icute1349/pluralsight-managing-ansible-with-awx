@@ -1,9 +1,24 @@
 ---
-- name: Install ClamAV on Linux hosts
+- name: Install ClamAV on Ubuntu 22.04
   hosts: all
+  become: yes
   tasks:
-    - name: Install ClamAV through package manager
-      ansible.builtin.package:
+    - name: Update apt package list
+      apt:
+        update_cache: yes
+    
+    - name: Install ClamAV
+      apt:
         name: clamav
         state: present
-      become: true
+    
+    - name: Install ClamAV daemon (optional)
+      apt:
+        name: clamav-daemon
+        state: present
+
+    - name: Ensure ClamAV is running
+      service:
+        name: clamav-daemon
+        state: started
+        enabled: yes
